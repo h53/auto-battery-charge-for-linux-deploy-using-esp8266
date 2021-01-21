@@ -1,5 +1,6 @@
 import paho.mqtt.client as mqtt
 from time import sleep
+import time as time
 
 def getBattery():
     with open('/sys/class/power_supply/Battery/capacity') as f:
@@ -34,6 +35,7 @@ client.subscribe(topic_subscribe, qos=0)
 client.loop_start()
 
 while True:
+    print(time.asctime( time.localtime(time.time()) ))
     if getBattery() < 40 and isCharging == False:
         isCharging = True
         client.publish(topic_publish, payload='1', qos=0) # 40 -> 0
@@ -61,3 +63,4 @@ while True:
 
     # sleep 5 minutes
     sleep(300)
+    print("")
