@@ -37,6 +37,7 @@ void setup_wifi() {
   Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
+  WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   while(WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -94,16 +95,6 @@ bool reconnect() {
   }
 }
 
-void setup() {
-  Serial.begin(serial_speed);
-  setup_wifi(); // blocking until wifi connected
-  client.setServer(mqtt_server, mqtt_port);
-  client.setCallback(callback);
-  
-  pinMode(ledPin, OUTPUT);
-  pinMode(toggle, OUTPUT);  // physical switch
-}
-
 bool afterMillis(const unsigned long & afterMillis, unsigned long & timer, bool (* callback)(unsigned long & timer)){
   if(currentMillis - timer > afterMillis){
     callback && callback(timer);
@@ -138,6 +129,16 @@ void autoControlMode(bool blocking, const unsigned int & blinkTime,const unsigne
   (blocking ? delayWrapper(blinkTime) : afterMillis(blinkTime * 2,timer2,resetTimer)) && digitalWriteWrapper(ledPin, LOW);
   (blocking ? delayWrapper(retryTime) : afterMillis(retryTime,timer3,resetTimer)) && callback && callback();
   afterMillis(chargeHours * 60 * 60 * 1000,timer4,nullptr) && digitalWriteWrapper(toggle, HIGH) && afterMillis(lastHours * 60 * 60 * 1000,timer4,resetTimer) && digitalWriteWrapper(toggle, LOW);
+}
+
+void setup() {
+  Serial.begin(serial_speed);
+  setup_wifi(); // blocking until wifi connected
+  client.setServer(mqtt_server, mqtt_port);
+  client.setCallback(callback);
+  
+  pinMode(ledPin, OUTPUT);
+  pinMode(toggle, OUTPUT);  // physical switch
 }
 
 void loop()
