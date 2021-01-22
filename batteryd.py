@@ -3,11 +3,11 @@ from time import sleep
 import time as time
 
 def getBattery():
-    with open('/sys/class/power_supply/Battery/capacity') as f:
+    with open('/sys/class/power_supply/Battery/capacity') as f: # update this value to your battery capacity path
         return int(f.read())
 
 def getCharge():
-    with open('/sys/class/power_supply/Battery/status') as f:
+    with open('/sys/class/power_supply/Battery/status') as f: # update this value to your battery statue path
         return "Charging" in f.read()
 
 def on_connect(client, userdata, flags, rc):
