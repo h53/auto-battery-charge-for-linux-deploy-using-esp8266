@@ -51,7 +51,7 @@ python3 batteryd.py
 ```
 #!/bin/sh -e
 # mosquitto
-# mosquitto -c /etc/mosquitto/mosquitto.conf -d
+mosquitto -c /etc/mosquitto/mosquitto.conf -d
 
 # batteryd
 python3 /path/to/batteryd.py > /path/to/logs/batteryd.log &
